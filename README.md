@@ -1,6 +1,6 @@
-# tt-operations
+# tt-Inffra
 
-Operations- und Plattform-Repository fuer den Tigers Microservice-Stack.
+Infrastruktur-, Operations- und Plattform-Repository fuer den Tigers Microservice-Stack.
 
 ## Zweck
 
