@@ -6,6 +6,12 @@ http:
         - web
       service: tt-auth
 
+    tt-members:
+      rule: Host(`members-beta.thun-tigers.net`) || Host(`members.thun-tigers.net`)
+      entryPoints:
+        - web
+      service: tt-members
+
     tt-agenda:
       rule: Host(`agenda-beta.thun-tigers.net`) || Host(`agenda.thun-tigers.net`)
       entryPoints:
@@ -23,6 +29,11 @@ http:
       loadBalancer:
         servers:
           - url: http://tt-auth:5000
+
+    tt-members:
+      loadBalancer:
+        servers:
+          - url: http://tt-members:5000
 
     tt-agenda:
       loadBalancer:

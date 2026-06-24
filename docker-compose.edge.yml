@@ -43,6 +43,11 @@ services:
       - tigers-edge
       - tigers-internal
 
+  tt-members:
+    networks:
+      - tigers-edge
+      - tigers-internal
+
   tt-agenda:
     networks:
       - tigers-edge

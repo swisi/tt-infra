@@ -7,6 +7,10 @@ services:
     ports:
       - "${AUTH_PORT:-8085}:5000"
 
+  tt-members:
+    ports:
+      - "${MEMBERS_PORT:-8088}:5000"
+
   tt-agenda:
     ports:
       - "${AGENDA_PORT:-8086}:5000"

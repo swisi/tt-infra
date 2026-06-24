@@ -15,12 +15,13 @@ Dieses Repository enthaelt die zentrale Infrastruktur fuer:
 Die fachlichen Anwendungen bleiben in separaten Repositories:
 
 - `tt-auth`
+- `tt-members`
 - `tt-agenda`
 - `tt-analytics`
 
 ## Zielbild
 
-`tt-auth` ist der zentrale Identity- und Access-Service. `tt-infra` stellt zentrale Stammdaten und Infrastruktur-APIs bereit. Fachliche Anwendungen wie `tt-agenda`, `tt-members` und `tt-analytics` werden als eigenstaendige Services betrieben und ueber den zentralen Stack orchestriert.
+`tt-auth` ist der zentrale Identity- und Access-Service. `tt-infra` stellt zentrale Stammdaten und Infrastruktur-APIs bereit. Fachliche Anwendungen wie `tt-members`, `tt-agenda` und `tt-analytics` werden als eigenstaendige Services betrieben und ueber den zentralen Stack orchestriert.
 
 ## Struktur
 
@@ -34,7 +35,7 @@ Die fachlichen Anwendungen bleiben in separaten Repositories:
 
 ## Schnellstart
 
-1. Repositories fuer `tt-auth`, `tt-agenda` und spaeter `tt-analytics` lokal neben dieses Repo legen oder als externe Images verwenden.
+1. Repositories fuer `tt-auth`, `tt-members`, `tt-agenda` und `tt-analytics` lokal neben dieses Repo legen oder als externe Images verwenden.
 2. `.env.example` nach `.env` kopieren und Werte setzen.
 3. Pfade oder Image-Namen im `docker-compose.yml` anpassen.
 4. Beta-Stack mit extern erreichbarer URL starten:
