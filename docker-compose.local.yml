@@ -1,4 +1,8 @@
 services:
+  tt-infra:
+    ports:
+      - "${INFRA_PORT:-8084}:5000"
+
   tt-auth:
     ports:
       - "${AUTH_PORT:-8085}:5000"

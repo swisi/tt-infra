@@ -20,7 +20,7 @@ Die fachlichen Anwendungen bleiben in separaten Repositories:
 
 ## Zielbild
 
-`tt-auth` ist der zentrale Identity- und Access-Service. Fachliche Anwendungen wie `tt-agenda` und `tt-analytics` werden als eigenstaendige Services betrieben und ueber den zentralen Stack orchestriert.
+`tt-auth` ist der zentrale Identity- und Access-Service. `tt-infra` stellt zentrale Stammdaten und Infrastruktur-APIs bereit. Fachliche Anwendungen wie `tt-agenda`, `tt-members` und `tt-analytics` werden als eigenstaendige Services betrieben und ueber den zentralen Stack orchestriert.
 
 ## Struktur
 
