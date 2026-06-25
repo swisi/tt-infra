@@ -41,6 +41,7 @@ services:
       DEFAULT_ANALYTICS_URL: ${DEFAULT_ANALYTICS_URL:-http://localhost:8087}
       TT_INFRA_INTERNAL_URL: ${TT_INFRA_INTERNAL_URL:-http://tt-infra:5000}
       SSO_SHARED_SECRET: ${SSO_SHARED_SECRET}
+      INTERNAL_API_SECRET: ${INTERNAL_API_SECRET:-tt-internal-dev-secret-change-me}
       SSO_TOKEN_EXPIRY_SECONDS: ${SSO_TOKEN_EXPIRY_SECONDS:-60}
       RATELIMIT_STORAGE_URI: redis://tt-redis:6379/0
       TZ: ${TZ:-Europe/Zurich}
