@@ -68,6 +68,39 @@ def positions():
     return jsonify({'status': 'created', 'position': row.to_dict()}), 201
 
 
+@bp.route('/master-data/positions/reorder', methods=['POST'])
+def positions_reorder():
+    unauthorized = _require_auth()
+    if unauthorized:
+        return unauthorized
+
+    payload = request.get_json(silent=True) or {}
+    order = payload.get('order') or []
+    if not isinstance(order, list):
+        return jsonify({'error': 'invalid_order'}), 400
+
+    normalized = []
+    seen = set()
+    for item in order:
+        key = str(item or '').strip().upper()
+        if not key or key in seen:
+            continue
+        normalized.append(key)
+        seen.add(key)
+
+    rows = PositionGroup.query.order_by(PositionGroup.sort_order, PositionGroup.label, PositionGroup.key).all()
+    by_key = {row.key: row for row in rows}
+    if len(normalized) != len(rows) or any(key not in by_key for key in normalized):
+        return jsonify({'error': 'invalid_order'}), 400
+
+    for index, key in enumerate(normalized, start=1):
+        by_key[key].sort_order = index
+
+    db.session.commit()
+    ordered_rows = PositionGroup.query.order_by(PositionGroup.sort_order, PositionGroup.label, PositionGroup.key).all()
+    return jsonify({'status': 'updated', 'positions': [row.to_dict() for row in ordered_rows]}), 200
+
+
 @bp.route('/master-data/positions/<string:key>', methods=['GET', 'PUT', 'DELETE'])
 def position_detail(key):
     unauthorized = _require_auth()
