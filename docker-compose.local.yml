@@ -18,3 +18,7 @@ services:
   tt-analytics:
     ports:
       - "${ANALYTICS_PORT:-8087}:5000"
+
+  tt-attendance:
+    ports:
+      - "${ATTENDANCE_PORT:-5090}:5000"
