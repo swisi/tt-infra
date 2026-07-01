@@ -80,6 +80,13 @@ Beispiel fuer den laufenden Beta-Stack:
 - members-beta.thun-tigers.net
 - agenda-beta.thun-tigers.net
 - analytics-beta.thun-tigers.net
+- attendance-beta.thun-tigers.net
+
+Alle fachlichen Services verwenden denselben Einstieg:
+
+- `/<service>/login` leitet auf `tt-auth` weiter
+- `tt-auth` startet den SSO-Flow
+- der Service nimmt das Token unter `/auth/sso` an und springt danach auf `/`
 
 Start auf Server (mit vorhandener .env.beta):
 
@@ -95,7 +102,8 @@ docker compose --env-file .env.beta \
 
 - Die Compose-Dateien verwenden fuer tt-auth, tt-members, tt-agenda, tt-analytics und tt-attendance relative Build-Pfade in benachbarte Repositories.
 - Feste `container_name`-Eintraege wurden bewusst entfernt, damit lokale und spaetere Deployment-Kontexte nicht aneinanderkoppeln.
-- Fuer Edge-Betrieb uebernimmt Cloudflare den externen Zugang, waehrend Traefik intern per Hostname an die Services weiterleitet.
+- Fuer Edge-Betrieb uebernimmt Cloudflare den externen Zugang, waehrend `cloudflared` den Traffic in den Stack bringt.
+- Die fachlichen Services folgen alle demselben Login- und SSO-Startpunkt.
 - Wenn GHCR Pulls nicht verfuegbar sind, ist Source-Sync plus Build auf dem Server ein gueltiger Betriebsweg.
 
 ## Produktions-Releases

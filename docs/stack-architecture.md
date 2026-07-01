@@ -137,6 +137,17 @@ Empfehlung:
 - SSO und Service-Token wie bei `tt-agenda`
 - bei wachsendem Datenbestand sind Postgres-Migrationen und Indizes leichter sauber zu pflegen
 
+### Einheitlicher Einstieg fuer alle fachlichen Services
+
+Alle fachlichen Microservices sollen denselben Benutzerfluss verwenden:
+
+- die Kachel bzw. der Einstiegspunkt leitet auf `/<service>/login` weiter
+- `/<service>/login` springt zentral zu `tt-auth`
+- `tt-auth` erzeugt das SSO-Token und leitet auf `/<service>/auth/sso` zurueck
+- `/<service>/auth/sso` schliesst den Login ab und fuehrt auf die Startseite des Service
+
+Damit verhalten sich `tt-members`, `tt-agenda`, `tt-attendance` und spaeter `tt-analytics` aus Benutzersicht gleich.
+
 ### `tt-analytics`
 
 Eigene Datenbank:
