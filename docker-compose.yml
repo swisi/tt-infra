@@ -222,6 +222,40 @@ services:
     networks:
       - tigers-internal
 
+  tt-attendance:
+    build:
+      context: ../tt-attendance
+    image: ghcr.io/swisi/tt-attendance:latest
+    environment:
+      SECRET_KEY: ${ATTENDANCE_SECRET_KEY:-tt-attendance-dev-secret}
+      SQLALCHEMY_DATABASE_URI: ${ATTENDANCE_DATABASE_URL:-sqlite:////app/instance/attendance.db}
+      AUTH_BASE_URL: ${ATTENDANCE_AUTH_BASE_URL:-http://localhost:8085}
+      TT_AUTH_INTERNAL_URL: ${TT_AUTH_INTERNAL_URL:-http://tt-auth:5000}
+      TT_AGENDA_INTERNAL_URL: ${TT_AGENDA_INTERNAL_URL:-http://tt-agenda:5000}
+      TT_INFRA_INTERNAL_URL: ${TT_INFRA_INTERNAL_URL:-http://tt-infra:5000}
+      SSO_SHARED_SECRET: ${SSO_SHARED_SECRET:-tt-sso-dev-secret-change-me}
+      SSO_EXPECTED_AUDIENCE: ${ATTENDANCE_SSO_EXPECTED_AUDIENCE:-tt-attendance}
+      INTERNAL_API_SECRET: ${INTERNAL_API_SECRET:-tt-internal-dev-secret-change-me}
+      RATELIMIT_STORAGE_URI: memory://
+      LOG_LEVEL: INFO
+      TZ: ${TZ:-Europe/Zurich}
+    volumes:
+      - tt-attendance-data:/app/instance
+    depends_on:
+      tt-auth:
+        condition: service_healthy
+      tt-agenda:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    restart: unless-stopped
+    networks:
+      - tigers-internal
+
   tt-postgres-analytics:
     image: postgres:16
     environment:
@@ -253,4 +287,5 @@ volumes:
   postgres-agenda-data:
   postgres-analytics-data:
   analytics-uploads-data:
+  tt-attendance-data:
   redis-data:
