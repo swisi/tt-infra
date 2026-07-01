@@ -58,6 +58,11 @@ services:
       - tigers-edge
       - tigers-internal
 
+  tt-attendance:
+    networks:
+      - tigers-edge
+      - tigers-internal
+
 networks:
   tigers-edge:
     name: ${TRAEFIK_DOCKER_NETWORK:-tigers-edge}

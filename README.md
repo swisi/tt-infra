@@ -18,12 +18,13 @@ Die fachlichen Anwendungen bleiben in separaten Repositories:
 - `tt-members`
 - `tt-agenda`
 - `tt-analytics`
+- `tt-attendance`
 
 ## Zielbild
 
 tt-auth ist der zentrale Identity- und Access-Service.
 tt-infra betreibt den Compose-Stack, Netzwerk, Umgebungen und Betriebsprozesse.
-Fachliche Anwendungen wie tt-members, tt-agenda und tt-analytics laufen als eigene Services.
+Fachliche Anwendungen wie tt-members, tt-agenda, tt-analytics und tt-attendance laufen als eigene Services.
 
 ## Struktur
 
@@ -40,7 +41,7 @@ Fachliche Anwendungen wie tt-members, tt-agenda und tt-analytics laufen als eige
 
 ## Schnellstart
 
-1. Repositories tt-auth, tt-members, tt-agenda und tt-analytics lokal neben dieses Repo legen.
+1. Repositories tt-auth, tt-members, tt-agenda, tt-analytics und tt-attendance lokal neben dieses Repo legen.
 2. .env.example nach .env kopieren und Werte setzen.
 3. Stack starten.
 
@@ -92,7 +93,7 @@ docker compose --env-file .env.beta \
 
 ## Hinweise
 
-- Die Compose-Dateien verwenden fuer tt-auth, tt-members, tt-agenda und tt-analytics relative Build-Pfade in benachbarte Repositories.
+- Die Compose-Dateien verwenden fuer tt-auth, tt-members, tt-agenda, tt-analytics und tt-attendance relative Build-Pfade in benachbarte Repositories.
 - Feste `container_name`-Eintraege wurden bewusst entfernt, damit lokale und spaetere Deployment-Kontexte nicht aneinanderkoppeln.
 - Fuer Edge-Betrieb uebernimmt Cloudflare den externen Zugang, waehrend Traefik intern per Hostname an die Services weiterleitet.
 - Wenn GHCR Pulls nicht verfuegbar sind, ist Source-Sync plus Build auf dem Server ein gueltiger Betriebsweg.
@@ -100,5 +101,5 @@ docker compose --env-file .env.beta \
 ## Produktions-Releases
 
 - `releases/0.1.0.env` ist der erste zentrale Plattform-Release
-- die Datei pinnt die freigegebenen Image-Tags fuer `tt-infra`, `tt-auth`, `tt-members`, `tt-agenda` und `tt-analytics`
+- die Datei pinnt die freigegebenen Image-Tags fuer `tt-infra`, `tt-auth`, `tt-members`, `tt-agenda`, `tt-analytics` und `tt-attendance`
 - die produktive Secret-Datei bleibt getrennt; das Release-Manifest liefert nur die Tag-Auswahl

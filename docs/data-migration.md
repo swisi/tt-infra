@@ -2,15 +2,17 @@
 
 ## Status
 
-Die Anwendungen `tt-auth` und `tt-agenda` sind fuer PostgreSQL vorbereitet. Die vorhandenen SQLite-Daten liegen aktuell hier:
+Die Anwendungen `tt-auth`, `tt-agenda` und `tt-attendance` sind fuer PostgreSQL vorbereitet. Die vorhandenen SQLite-Daten liegen aktuell hier:
 
 - `../tt-auth/instance/auth.db`
 - `../tt-agenda/instance/trainings.db`
+- `tt-attendance` hat keinen SQLite-Standardpfad mehr; sie nutzt jetzt `tt-postgres-attendance`
 
 Aktueller Datenbestand:
 
 - `tt-auth`: 1 Benutzer, 0 Services
 - `tt-agenda`: 12 Trainings, 113 Activities, 1 Training Instance, 10 Activity Instances, 5 Activity Types, 2 Benutzer
+- `tt-attendance`: neue Postgres-Datenbank, Migration nur bei vorhandenen Alt-Daten noetig
 
 Zusatz:
 
@@ -19,7 +21,7 @@ Zusatz:
 ## Voraussetzungen
 
 - Docker Desktop oder ein laufender Docker-Daemon
-- `docker compose up -d tt-postgres-auth tt-postgres-agenda` in tt-infra
+- `docker compose up -d tt-postgres-auth tt-postgres-agenda tt-postgres-attendance` in tt-infra
 - Python mit `psycopg` verfuegbar
 
 ## Postgres starten
@@ -82,6 +84,7 @@ Die produktiven Postgres-Daten liegen in eigenen Docker-Volumes:
 
 - `postgres-auth-data`
 - `postgres-agenda-data`
+- `postgres-attendance-data`
 - `postgres-analytics-data`
 
 Empfohlene Backups:

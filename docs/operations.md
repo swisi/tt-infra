@@ -5,7 +5,7 @@
 Voraussetzungen:
 
 - Docker und Docker Compose
-- lokale Checkouts von tt-auth, tt-members, tt-agenda und tt-analytics neben diesem Repository
+- lokale Checkouts von tt-auth, tt-members, tt-agenda, tt-analytics und tt-attendance neben diesem Repository
 
 ## Start
 
@@ -22,13 +22,14 @@ tigers/
   tt-members/
   tt-agenda/
   tt-analytics/
+  tt-attendance/
   tt-infra/
 ```
 
 ## Wichtige Hinweise
 
-- tt-auth, tt-agenda und tt-analytics nutzen jeweils eigene Postgres-Datenbanken.
-- tt-members und tt-analytics sind fester Bestandteil des Standard-Stacks.
+- tt-auth, tt-agenda, tt-attendance und tt-analytics nutzen jeweils eigene Postgres-Datenbanken.
+- tt-members, tt-analytics und tt-attendance sind fester Bestandteil des Standard-Stacks.
 - JWT_COOKIE_DOMAIN muss je Umgebung korrekt gesetzt sein (Beta: .thun-tigers.net).
 
 ## Persistenz und Backups
@@ -37,6 +38,7 @@ Die Datenbanken laufen in eigenen Docker-Volumes:
 
 - `postgres-auth-data`
 - `postgres-agenda-data`
+- `postgres-attendance-data`
 - `postgres-analytics-data`
 
 Dadurch bleiben die Daten getrennt von den Applikationscontainern persistent. Fuer regelmaessige Backups sollte nicht das App-Dateisystem, sondern das jeweilige Postgres-Volume bzw. ein `pg_dump`-Prozess gesichert werden.
@@ -118,7 +120,7 @@ Empfohlene Trennung:
 
 ## CI/CD Image-Strategie
 
-Die Repositories `tt-auth`, `tt-members`, `tt-agenda`, `tt-analytics` und `tt-infra` enthalten standardisierte Container-Build-Workflows:
+Die Repositories `tt-auth`, `tt-members`, `tt-agenda`, `tt-analytics`, `tt-attendance` und `tt-infra` enthalten standardisierte Container-Build-Workflows:
 
 - Push auf `main`: baut `beta` und `sha-<commit>`
 - Git-Tag `v*`: baut Release-Tag und `latest`
@@ -226,7 +228,7 @@ Bestandsnotiz:
 
 - Cloudflare bleibt der externe Edge-Layer fuer DNS, TLS, WAF und Tunnel-Terminierung.
 - `cloudflared` bringt den Traffic in den Docker-Stack.
-- Traefik bleibt intern sinnvoll und ist nicht doppelt: es uebernimmt Hostname-Routing, Docker-Service-Discovery und Ingress-Logik zwischen `tt-auth`, `tt-agenda` und `tt-analytics`.
+- Traefik bleibt intern sinnvoll und ist nicht doppelt: es uebernimmt Hostname-Routing, Docker-Service-Discovery und Ingress-Logik zwischen `tt-auth`, `tt-agenda`, `tt-analytics` und `tt-attendance`.
 - Pfadbasiertes Routing wurde bewusst nicht als Standardmodell gewaehlt, weil die bestehenden Apps sauberer ueber eigene Subdomains betrieben werden koennen.
 
 ## Bekannte Betriebsnotiz

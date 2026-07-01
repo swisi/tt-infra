@@ -2,26 +2,28 @@
 
 ## Ausgangslage
 
-Aktuell existieren zwei getrennte Flask-Anwendungen:
+Aktuell existieren drei getrennte Flask-Anwendungen:
 
 - `tt-auth` als Login-, Benutzer- und Service-Dashboard
 - `tt-agenda` als eigener Microservice mit bereits vorhandener SSO-Anbindung
+- `tt-attendance` als weiterer Service mit gleicher SSO-Anbindung
 
 Bereits umgesetzt:
 
 - `tt-auth` erzeugt ein kurzlebiges SSO-JWT fuer `tt-agenda`
 - `tt-agenda` validiert dieses Token unter `/auth/sso`
-- beide Anwendungen sind als eigenstaendige Docker-Container vorbereitet
-- beide Anwendungen verwenden aktuell SQLite
+- `tt-attendance` verwendet den gleichen SSO-Flow
+- alle drei Anwendungen sind als eigenstaendige Docker-Container vorbereitet
+- alle drei Anwendungen verwenden aktuell SQLite
 
-Damit ist die richtige Richtung schon angelegt. Fuer einen sauberen Ausbau sollte `tt-auth` zum zentralen Identity- und Access-Service werden, waehrend `tt-agenda` und spaeter `tt-analytics` fachliche Microservices bleiben.
+Damit ist die richtige Richtung schon angelegt. Fuer einen sauberen Ausbau sollte `tt-auth` zum zentralen Identity- und Access-Service werden, waehrend `tt-agenda`, `tt-attendance` und spaeter `tt-analytics` fachliche Microservices bleiben.
 
 ## Zielbild
 
 ### Architekturprinzip
 
 - `tt-auth` ist die zentrale Anwendung fuer Login, Benutzerverwaltung, Rollen und Service-Freigaben
-- `tt-agenda` und `tt-analytics` bleiben fachlich eigenstaendige Services
+- `tt-agenda`, `tt-attendance` und `tt-analytics` bleiben fachlich eigenstaendige Services
 - Zugriff auf Microservices erfolgt nur ueber `tt-auth`
 - jeder Service vertraut nur Tokens aus `tt-auth`
 - persistente Daten liegen nicht mehr in SQLite, sondern in Postgres
@@ -32,9 +34,11 @@ Damit ist die richtige Richtung schon angelegt. Fuer einen sauberen Ausbau sollt
 - `tt-auth`
 - `tt-agenda`
 - `tt-analytics`
+- `tt-attendance`
 - `tt-postgres-auth`
 - `tt-postgres-agenda`
 - `tt-postgres-analytics`
+- `tt-postgres-attendance`
 - optional `redis` fuer Rate Limiting, Caching, Background Jobs
 - optional `traefik` oder `nginx` als Entry Point
 
@@ -46,6 +50,7 @@ Ich wuerde hier Postgres bevorzugen:
 - JSON-, Index- und Analyse-Funktionen sind fuer `tt-analytics` spaeter deutlich staerker
 - Migrations und mehrere Services sind in der Praxis meist unkomplizierter
 - `tt-agenda` und `tt-auth` sind bereits SQLAlchemy-basiert und daher leicht umstellbar
+- `tt-attendance` folgt demselben Muster und ist ebenfalls gut umstellbar
 
 MariaDB ist moeglich, aber fuer das geplante Analytics-Szenario ist Postgres die robustere Standardwahl.
 
@@ -69,7 +74,7 @@ Mittelfristig:
 
 Nicht sofort auf Keycloak springen. Euer vorhandener Flow funktioniert bereits und ist fuer einen internen Trainer-Staff-Stack ausreichend, wenn ihr ihn sauber erweitert:
 
-- pro Service eindeutige Audience, z. B. `tt-agenda`, `tt-analytics`
+- pro Service eindeutige Audience, z. B. `tt-agenda`, `tt-analytics`, `tt-attendance`
 - zentral definierte Rollen, z. B. `admin`, `coach`, `analyst`
 - zusaetzlich Service-Berechtigungen, nicht nur grobe Rollen
 - optional spaeter Wechsel von symmetrischem `SSO_SHARED_SECRET` auf asymmetrische Signierung
@@ -104,7 +109,7 @@ Eigene Datenbank:
 - optional `audit_log`
 - optional `password_reset_tokens`
 
-`tt-auth` sollte keine Fachdaten von Agenda oder Analytics speichern.
+`tt-auth` sollte keine Fachdaten von Agenda, Attendance oder Analytics speichern.
 
 ### `tt-agenda`
 
@@ -119,6 +124,18 @@ Empfehlung:
 - lokale User-Tabelle nur noch als "shadow user" oder lokale Berechtigungssicht
 - keine eigene Passwortpflege mehr
 - Login ueber lokales Passwort mittelfristig entfernen oder nur als Fallback fuer Notfall/Admin beibehalten
+
+### `tt-attendance`
+
+Eigene Datenhaltung:
+
+- Anwesenheitsstatus pro Training
+- eigene Postgres-Datenbank `tt-postgres-attendance`
+
+Empfehlung:
+
+- SSO und Service-Token wie bei `tt-agenda`
+- bei wachsendem Datenbestand sind Postgres-Migrationen und Indizes leichter sauber zu pflegen
 
 ### `tt-analytics`
 
@@ -150,6 +167,7 @@ Die Applikations-Repositories bleiben separat:
 - `tt-auth`
 - `tt-agenda`
 - `tt-analytics`
+- `tt-attendance`
 
 ### Compose-Topologie
 
@@ -158,6 +176,7 @@ Ein gemeinsamer Compose-Stack sollte mindestens enthalten:
 - `auth`
 - `agenda`
 - `analytics`
+- `attendance`
 - `postgres_auth`
 - `postgres_agenda`
 - `postgres_analytics`
@@ -170,6 +189,7 @@ Ein gemeinsamer Compose-Stack sollte mindestens enthalten:
 - optional zusaetzliches Edge-Netz fuer Traefik und `cloudflared`
 - nur Reverse Proxy exponiert Ports nach aussen
 - interne Services sprechen ueber Compose-Service-Namen, z. B. `http://tt-agenda:5000`
+- `tt-attendance` bleibt intern gleich eingebunden wie `tt-agenda`
 
 ### Domains
 
@@ -178,6 +198,7 @@ Saubere Variante:
 - `auth.example.ch`
 - `agenda.example.ch`
 - `analytics.example.ch`
+- `attendance.example.ch`
 
 Falls alles unter einer Domain laufen soll:
 
@@ -202,7 +223,7 @@ Die empfohlene Kette lautet:
 - Cloudflare
 - `cloudflared`
 - Traefik
-- `tt-auth`, `tt-agenda`, `tt-analytics`
+- `tt-auth`, `tt-agenda`, `tt-attendance`, `tt-analytics`
 
 Das ist nicht doppelt, weil Cloudflare und Traefik unterschiedliche Rollen haben:
 
@@ -216,9 +237,10 @@ Das ist nicht doppelt, weil Cloudflare und Traefik unterschiedliche Rollen haben
 Heute funktioniert:
 
 - Login bei `tt-auth`
-- Launch-Link nach `tt-agenda`
+- Launch-Link nach `tt-agenda` und `tt-attendance`
 - `tt-auth` generiert kurzlebiges SSO-Token
 - `tt-agenda` erstellt daraus lokale Session
+- `tt-attendance` nutzt denselben Login- und Launch-Flow
 
 ### Empfehlung
 
@@ -228,6 +250,7 @@ Das ist fuer den Anfang gut. Ich wuerde es so erweitern:
 - Token-Lebensdauer kurz halten, z. B. 30 bis 60 Sekunden
 - Zielservice erstellt danach eigene Session
 - Rollen und erlaubte Services ins Token oder per nachgelagerter Userinfo-Schnittstelle bereitstellen
+- `tt-attendance` verwendet die gleiche Session-Logik wie `tt-agenda`
 
 Mittelfristig:
 
@@ -248,6 +271,7 @@ Beibehalten:
 Erweitern:
 
 - konfigurierbare Zielservices statt Sonderfall nur fuer Agenda
+- konfigurierbare Zielservices statt Sonderfall nur fuer Agenda und Attendance
 - Rollenmodell von `user/admin` auf mehrere Rollen erweitern
 - Service-Freigaben pro Benutzer oder Rolle
 - `SQLALCHEMY_DATABASE_URI` aus Umgebungsvariable lesen
@@ -257,7 +281,7 @@ Der aktuelle Sonderfall `launch_agenda` sollte zu etwas Generischem werden, z. B
 
 - `/launch/<service_slug>`
 
-Dann kann `tt-analytics` ohne Sonderlogik angebunden werden.
+Dann koennen `tt-attendance` und `tt-analytics` ohne Sonderlogik angebunden werden.
 
 ### `tt-agenda`
 
@@ -281,7 +305,7 @@ In `tt-agenda` gibt es aktuell Backup/Restore-Code mit direkter SQLite-Kopierlog
 
 Neu bauen als eigener Service mit:
 
-- gleichem SSO-Einstieg wie `tt-agenda`
+- gleichem SSO-Einstieg wie `tt-agenda` und `tt-attendance`
 - eigener Datenbank
 - klar getrennten Rollen und Rechten
 - eigener API-Schicht
@@ -297,19 +321,20 @@ Ich wuerde `tt-analytics` von Anfang an so aufsetzen, dass es:
 ### Phase 1
 
 - `tt-auth` als einziges Login-System festziehen
-- `tt-agenda`-SSO auf dem aktuellen Modell stabilisieren
+- `tt-agenda`- und `tt-attendance`-SSO auf dem aktuellen Modell stabilisieren
 - generischen Service-Launch in `tt-auth` einfuehren
 - Rollen und Service-Freigaben in `tt-auth` erweitern
 
 ### Phase 2
 
-- beide Repositories auf `SQLALCHEMY_DATABASE_URI` per ENV umstellen
+- die betroffenen Repositories auf `SQLALCHEMY_DATABASE_URI` per ENV umstellen
 - Postgres lokal per Docker einhaengen
 - SQLite-Daten migrieren
 - SQLite-spezifische Admin- und Backup-Logik aus `tt-agenda` ersetzen
 
 ### Phase 3
 
+- `tt-attendance` als bestehenden Microservice weiter stabilisieren
 - `tt-analytics` als neuen Microservice aufbauen
 - `tt-auth` um Analytics-Service erweitern
 - Service-Zugriffe ueber `tt-auth`-Dashboard freischalten
@@ -369,7 +394,7 @@ In jedem Repo:
 Ich wuerde es so umsetzen:
 
 1. `tt-auth` bleibt zentraler Einstiegspunkt und Identity-Service.
-2. `tt-agenda` und `tt-analytics` bleiben getrennte Microservices.
+2. `tt-agenda`, `tt-attendance` und `tt-analytics` bleiben getrennte Microservices.
 3. Alle Services bekommen eigene Postgres-Datenbanken.
 4. Das bestehende SSO-Modell wird zuerst generalisiert, nicht ersetzt.
 5. Ein gemeinsamer Docker-Compose-Stack orchestriert alle Container.
@@ -380,5 +405,5 @@ Ich wuerde es so umsetzen:
 Technisch waeren aus meiner Sicht diese drei Schritte jetzt die richtigen:
 
 1. `tt-auth` auf generischen Service-Launch und servicebezogene Berechtigungen umbauen.
-2. `tt-auth` und `tt-agenda` auf Postgres-konfigurierbare `DATABASE_URL` umstellen.
-3. Einen gemeinsamen Root-Compose-Stack fuer `auth`, `agenda`, `postgres` und spaeter `analytics` anlegen.
+2. `tt-auth`, `tt-agenda` und `tt-attendance` auf konfigurierbare `DATABASE_URL` umstellen, wo relevant.
+3. Einen gemeinsamen Root-Compose-Stack fuer `auth`, `agenda`, `attendance`, `postgres` und spaeter `analytics` anlegen.

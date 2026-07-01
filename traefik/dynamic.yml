@@ -24,6 +24,12 @@ http:
         - web
       service: tt-analytics
 
+    tt-attendance:
+      rule: Host(`attendance-beta.thun-tigers.net`) || Host(`attendance.thun-tigers.net`)
+      entryPoints:
+        - web
+      service: tt-attendance
+
   services:
     tt-auth:
       loadBalancer:
@@ -44,3 +50,8 @@ http:
       loadBalancer:
         servers:
           - url: http://tt-analytics:5000
+
+    tt-attendance:
+      loadBalancer:
+        servers:
+          - url: http://tt-attendance:5000

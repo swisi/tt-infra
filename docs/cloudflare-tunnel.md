@@ -10,7 +10,7 @@ Die Kette lautet:
 - Cloudflare DNS und Edge
 - `cloudflared`
 - Traefik
-- `tt-auth`, `tt-members`, `tt-agenda`, `tt-analytics`
+- `tt-auth`, `tt-members`, `tt-agenda`, `tt-analytics`, `tt-attendance`
 
 Cloudflare und Traefik sind dabei nicht doppelt.
 
@@ -23,6 +23,7 @@ Cloudflare und Traefik sind dabei nicht doppelt.
 - members-beta.thun-tigers.net
 - agenda-beta.thun-tigers.net
 - analytics-beta.thun-tigers.net
+- attendance-beta.thun-tigers.net
 
 ## Routing-Prinzip
 

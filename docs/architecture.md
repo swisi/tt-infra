@@ -10,6 +10,7 @@ tt-infra ist das zentrale Plattform-Repository fuer Infrastruktur, Deployment un
 - `tt-agenda` Trainings- und Agenda-Service
 - `tt-analytics` Analytics- und Reporting-Service
 - `tt-members` Mitgliederprofile und Team-Mitgliedschaften
+- `tt-attendance` Anwesenheit und Trainingsstatus
 - `tt-infra` Compose, Ops, Deployment, Doku
 
 ## Zielarchitektur
@@ -29,6 +30,7 @@ Jeder Service bekommt seine eigene Datenbank:
 - `tt-postgres-auth`
 - `tt-postgres-agenda`
 - `tt-postgres-analytics`
+- `tt-postgres-attendance`
 
 Dadurch bleiben Datenmodell, Migrationen und Deployments entkoppelt.
 

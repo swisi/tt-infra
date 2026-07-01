@@ -2,7 +2,7 @@
 
 Status: Accepted (Defacto)
 Owner: Platform Team
-Gilt fuer: tt-auth, tt-members, tt-agenda, tt-analytics
+Gilt fuer: tt-auth, tt-members, tt-agenda, tt-analytics, tt-attendance
 
 ## Ziel
 Ein einheitliches Muster fuer tabellarische CRUD-Ansichten in allen Microservices.

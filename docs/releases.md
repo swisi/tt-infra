@@ -16,11 +16,21 @@ Gemeinsamer Neustart:
 - `tt-members`: `0.1.0`
 - `tt-agenda`: `0.1.0`
 - `tt-analytics`: `0.1.0`
+- `tt-attendance`: `0.1.0`
 - `tt-infra`: `0.1.0`
 
 Manifest:
 
 - `releases/0.1.0.env`
+
+Die Manifest-Datei pinnt die Image-Tags fuer:
+
+- `TT_INFRA_IMAGE_TAG`
+- `TT_AUTH_IMAGE_TAG`
+- `TT_MEMBERS_IMAGE_TAG`
+- `TT_AGENDA_IMAGE_TAG`
+- `TT_ANALYTICS_IMAGE_TAG`
+- `TT_ATTENDANCE_IMAGE_TAG`
 
 ## Release vorbereiten
 

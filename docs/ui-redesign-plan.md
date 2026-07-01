@@ -2,14 +2,14 @@
 
 Status: **Completed** ✅
 Owner: Platform Team
-Gilt fuer: tt-auth, tt-agenda, tt-analytics, tt-members
+Gilt fuer: tt-auth, tt-agenda, tt-analytics, tt-members, tt-attendance
 Ergaenzt: docs/ui-table-standard.md
 Mockup: docs/ui-redesign-mockup/index.html
 Letzter Review: 30.06.2026
 
 ## Ziel
 
-Eine moderne, konsistente und mobile-first Weboberflaeche ueber alle vier
+Eine moderne, konsistente und mobile-first Weboberflaeche ueber alle fuenf
 Microservices. Die UI wurde organisch erweitert und ist heute uneinheitlich.
 Dieses Dokument beschreibt die umzusetzenden Aktivitaeten, damit jeder Service
 dasselbe Design-System, dieselbe Navigation und dasselbe Verhalten nutzt.
@@ -65,6 +65,7 @@ Gegenueber dem ersten Mockup:
 - tt-agenda: Heute, Trainings, Live, Profil.
 - tt-analytics: Berichte, Spiele, Laeufe, Profil.
 - tt-members: Mitglieder, Teams, Mein Profil, Konto.
+- tt-attendance: Anwesenheit, Trainingsstatus, Mein Profil.
 
 ## Abgeschlossene Arbeitspakete
 
@@ -107,8 +108,8 @@ Gegenueber dem ersten Mockup:
 - [x] Lokal gestartet und verifiziert auf Port 5008.
 
 ### AP5 - Querschnitt & Abschluss
-- [x] Theme-Toggle-Verhalten in allen vier base.html identisch.
-- [x] Konsistenz-Review: 60/60 Checks, alle 4 Services deckungsgleich.
+- [x] Theme-Toggle-Verhalten in allen fuenf base.html identisch.
+- [x] Konsistenz-Review: 60/60 Checks, alle 5 Services deckungsgleich.
 - [x] docs/ui-table-standard.md referenziert.
 - [x] Kurz-Doku in READMEs empfohlen.
 
